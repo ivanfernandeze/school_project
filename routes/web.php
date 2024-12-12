@@ -39,6 +39,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/detalle-notas', [DetalleNotasController::class, 'index'])->name('detalle-notas.index');
     Route::post('/nota-capacidad', [NotaCapacidadController::class, 'store'])->name('nota-capacidad.store');
     Route::get('/dashboard', [ResumenXController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard/director', [ResumenXController::class, 'director'])->name('director');
 
 
     Route::get('/gradosYSecciones', [ResumenXController::class, 'index'])->name('gradosYSecciones');
@@ -121,3 +122,5 @@ Route::get('/alumno/notas/{codigoAlumno}', [ViewRoleAlumnoController::class, 'ir
 Route::get('/vista-jerarquica', [AsignaturaController::class, 'vistaJerarquica'])->name('vista.jerarquica');
 
 Route::resource('users', UserController::class);
+Route::get('/capacidades/asignatura/{idAsignatura}', [CapacidadController::class, 'getCapacidadesPorAsignatura'])->name('capacidades.porAsignatura');
+Route::get('/alumnos-matriculados/reporte/{idNivel}/{idGrado}/{idSeccion}', [AlumnosMatriculadosController::class, 'reporte'])->name('alumnosMatriculados.reporte');
