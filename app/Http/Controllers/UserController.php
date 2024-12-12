@@ -10,17 +10,17 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $buscarPor = $request->input('buscarpor');
-        
+
         // Filtrar solo los usuarios con los roles específicos
         $rolesPermitidos = ['director', 'admin', 'secretaria'];  // Los roles que deseas mostrar
-    
+
         $users = User::when($buscarPor, function ($query, $buscarPor) {
-                return $query->where('name', 'like', '%' . $buscarPor . '%')
-                             ->orWhere('email', 'like', '%' . $buscarPor . '%');
-            })
+            return $query->where('name', 'like', '%' . $buscarPor . '%')
+                ->orWhere('email', 'like', '%' . $buscarPor . '%');
+        })
             ->whereIn('role', $rolesPermitidos) // Filtrar por los roles permitidos
             ->paginate(10);
-    
+
         return view('pages.users.index', compact('users'));
     }
 
@@ -37,7 +37,7 @@ class UserController extends Controller
             'password' => 'required|string|min:8|confirmed',
             'role' => 'required|in:director,secretaria', // Validación para los roles permitidos
         ]);
-    
+
         // Crear el usuario con los datos proporcionados
         User::create([
             'name' => $request->name,
@@ -45,7 +45,7 @@ class UserController extends Controller
             'password' => bcrypt($request->password),
             'role' => $request->role, // Agregar el rol aquí
         ]);
-    
+
         return redirect()->route('users.index')->with('success', 'Usuario creado exitosamente.');
     }
 
@@ -62,7 +62,7 @@ class UserController extends Controller
             'password' => 'nullable|string|min:8|confirmed',
             'role' => 'required|in:director,secretaria', // Validación para el rol
         ]);
-    
+
         // Actualizar el usuario con los datos proporcionados
         $user->update([
             'name' => $request->name,
@@ -70,10 +70,10 @@ class UserController extends Controller
             'password' => $request->password ? bcrypt($request->password) : $user->password,
             'role' => $request->role, // Agregar el rol
         ]);
-    
+
         return redirect()->route('users.index')->with('success', 'Usuario actualizado exitosamente.');
     }
-    
+
 
     public function destroy(User $user)
     {
